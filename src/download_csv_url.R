@@ -1,13 +1,15 @@
 # author: Rafael Pilliard Hellwig
 # date: 2020-11-19
 
-"Download a given CSV from the web into the data/raw directory.
+"Download a given CSV from the web into the repository
 
-Usage: src/download_csv_url.R <urls>... [--refresh_stale=<refresh_stale>]
+Usage: src/download_csv_url.R <urls>... [--relpath=<relpath>] [--refresh_stale=<refresh_stale>]
 
 Options:
 --urls=<urls>...                 One or more URLs pointing to onling CSV files
                                  (space separated, no quotation marks).
+--relpath=<relpath>              A relative path to the directory where the 
+                                 data will be saved [default: data/raw]
 --refresh_stale=<refresh_stale>  A logical indicating if outdated files should
                                  be refreshed [default: TRUE]
 " -> doc
@@ -21,11 +23,12 @@ opt <- docopt(doc)
 
 
 # Download the data
-main <- function(urls, refresh_stale) {
-    rs_str <- rlang::quo_name({{ refresh_stale }})
-    urls_str <- vapply(urls, rlang::quo_name, character(1))
-    for (url in urls_str) {
-        download_csv_url(url, rs_str) 
+main <- function(urls, relpath, refresh_stale) {
+    .refresh_stale <- rlang::quo_name({{ refresh_stale }})
+    .relpath <- rlang::quo_name({{ relpath }})
+    .urls <- vapply(urls, rlang::quo_name, character(1))
+    for (url in .urls) {
+        download_csv_url(url, .relpath, .refresh_stale) 
     }
 }
 
@@ -45,11 +48,9 @@ main <- function(urls, refresh_stale) {
 #'
 #' @return NULL. The function is called for its data downloading side-effect.
 #' @examples
-#' url <- paste0("https://catalogue.data.gov.bc.ca/dataset/44914a35-de9a-48",
-#'               "30-ac48-870001ef8935/resource/fb40239e-b718-4a79-b18f-7a6",
-#'               "2139d9792/download/provincial_voting_results.csv")
-#' download_csv_url(url)
-download_csv_url <- function(url, refresh_stale = TRUE) {
+#' url <- "https://people.sc.fsu.edu/~jburkardt/data/csv/trees.csv"
+#' download_csv_url(url, refresh_stale = TRUE)
+download_csv_url <- function(url, relpath = "data/raw", refresh_stale = TRUE) {
     
     # Read-in registry of data source URLs
     regfile  <- here::here("data", "raw", "registry.csv")
@@ -57,7 +58,7 @@ download_csv_url <- function(url, refresh_stale = TRUE) {
     
     # Define names and paths
     file <- basename(url)
-    path <- here::here("data", "raw", file)
+    path <- here::here(relpath, file)
     
     # Check that the URL is valid and ends in '.csv'
     rex_url <- "(\\b(https?|ftp|file)://)?[-a-z0-9+&@#/%?=~_|!:,.;]+csv$"
@@ -114,4 +115,4 @@ test_that("Malformed and non-CSV URLs should error", {
 #    file.remove(here::here("data", "raw", "trees.csv"))
 #})
 
-main(opt$urls, opt$refresh_stale)
+main(opt$urls, opt$relpath, opt$refresh_stale)
