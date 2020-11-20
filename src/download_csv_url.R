@@ -3,10 +3,11 @@
 
 "Download a given CSV from the web into the data/raw directory.
 
-Usage: src/download_csv_url.R <url> [--refresh_stale=<refresh_stale>]
+Usage: src/download_csv_url.R <urls>... [--refresh_stale=<refresh_stale>]
 
 Options:
---url=<url>                      URL of the CSV (without quotation marks)
+--urls=<urls>...                 One or more URLs pointing to onling CSV files
+                                 (space separated, no quotation marks).
 --refresh_stale=<refresh_stale>  A logical indicating if outdated files should
                                  be refreshed [default: TRUE]
 " -> doc
@@ -20,10 +21,12 @@ opt <- docopt(doc)
 
 
 # Download the data
-main <- function(url, refresh_stale) {
-    url_str <- rlang::quo_name({{ url }})
+main <- function(urls, refresh_stale) {
     rs_str <- rlang::quo_name({{ refresh_stale }})
-    download_csv_url(url_str, rs_str)
+    urls_str <- vapply(urls, rlang::quo_name, character(1))
+    for (url in urls_str) {
+        download_csv_url(url, rs_str) 
+    }
 }
 
 
@@ -111,4 +114,4 @@ test_that("Malformed and non-CSV URLs should error", {
 #    file.remove(here::here("data", "raw", "trees.csv"))
 #})
 
-main(opt$url, opt$refresh_stale)
+main(opt$urls, opt$refresh_stale)
