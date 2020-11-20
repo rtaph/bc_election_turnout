@@ -95,7 +95,7 @@ download_csv_url <- function(url, relpath = "data/raw", refresh_stale = TRUE) {
     } else if (refresh_stale) {
         # Download only if a more recent version exists
         i <- which(registry$url == url)
-        if (last_mod > registry$version_date[[i]]) {
+        if (length(i) == 0 || last_mod > registry$version_date[[i]]) {
             rlang::inform(glue::glue("{file} is stale. Downloading..."))
             download.file(url = url, destfile = path)
         } else {
