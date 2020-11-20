@@ -13,6 +13,7 @@ Options:
 
 # Load packages
 library(docopt)
+library(testthat)
 
 # User-specified shell options
 opt <- docopt(doc)
@@ -55,6 +56,12 @@ download_csv_url <- function(url, refresh_stale = TRUE) {
     file <- basename(url)
     path <- here::here("data", "raw", file)
     
+    # Check that the URL is valid and ends in '.csv'
+    rex_url <- "(\\b(https?|ftp|file)://)?[-a-z0-9+&@#/%?=~_|!:,.;]+csv$"
+    if (!grepl(rex_url, url, ignore.case = TRUE)) {
+        rlang::abort("Invalid URL. Must be a URL ending in '.csv'")
+    }
+    
     # Check the timestamp of when the CSV was last modified on the server
     h <- httr::HEAD(url)
     if (h$status_code != 200) {
@@ -76,7 +83,7 @@ download_csv_url <- function(url, refresh_stale = TRUE) {
             rlang::inform(glue::glue("{file} already up-to-date. Skipping..."))
         } 
     } else {
-        rlang::inform(glue::glue("{file} already exists Skipping..."))
+        rlang::inform(glue::glue("{file} already exists. Skipping..."))
     }
     
     # Update the registry
@@ -86,5 +93,22 @@ download_csv_url <- function(url, refresh_stale = TRUE) {
     registry <- dplyr::rows_upsert(registry, entry, by = "url")
     readr::write_csv(registry, regfile)
 }
+
+# Unit tests
+test_that("Malformed and non-CSV URLs should error", {
+    msg <- "Must be a URL ending in '.csv'"
+    expect_error(download_csv_url("abc"), msg)
+    expect_error(download_csv_url("google.com"), msg)
+})
+
+# This test is greyed-out to avoid blasting servers with repeated calls
+#test_that("Malformed and non-CSV URLs should error", {
+#    skip_if_offline()
+#    toy_csv <- "https://people.sc.fsu.edu/~jburkardt/data/csv/trees.csv"
+#    expect_message(download_csv_url(toy_csv), "not present. Downloading")
+#    expect_message(download_csv_url(toy_csv, refresh_stale = FALSE),
+#                   "already exists")
+#    file.remove(here::here("data", "raw", "trees.csv"))
+#})
 
 main(opt$url, opt$refresh_stale)
