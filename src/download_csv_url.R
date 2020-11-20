@@ -6,17 +6,21 @@
 Usage: src/download_csv_url.R <urls>... [--relpath=<relpath>] [--refresh_stale=<refresh_stale>]
 
 Options:
---urls=<urls>...                 One or more URLs pointing to onling CSV files
-                                 (space separated, no quotation marks).
---relpath=<relpath>              A relative path to the directory where the 
-                                 data will be saved [default: data/raw]
---refresh_stale=<refresh_stale>  A logical indicating if outdated files should
-                                 be refreshed [default: TRUE]
+--urls=<urls>...                 One or more URLs pointing to online CSV files
+                                 (space separated, no quotation marks). 
+                                 Required argument.
+--relpath=<relpath>              A path indicating the directory where the 
+                                 data will be saved, relative to the project
+                                 root [default: data/raw]
+--refresh_stale=<refresh_stale>  A logical indicating if existing outdated 
+                                 files should be refreshed if a more recent 
+                                 version is available online [default: TRUE]
 " -> doc
 
 # Load packages
 library(docopt)
 library(testthat)
+library(fs)
 
 # User-specified shell options
 opt <- docopt(doc)
@@ -42,6 +46,9 @@ main <- function(urls, relpath, refresh_stale) {
 #' https://elections.bc.ca/docs/EBC-Open-Data-Licence.pdf
 #'
 #' @param url A scalar character with the URL. Must end in ".csv".
+#' @param relpath A scalar character indicating the path of directory where
+#'   data should be saved (relative to the project root). Defaults to 
+#'   "data/raw"
 #' @param refresh_stale A scalar logical indicating whether data should be
 #'   refreshed if a more recent version exists on the provincial government's
 #'   servers. Defaults to TRUE.
@@ -52,13 +59,21 @@ main <- function(urls, relpath, refresh_stale) {
 #' download_csv_url(url, refresh_stale = TRUE)
 download_csv_url <- function(url, relpath = "data/raw", refresh_stale = TRUE) {
     
-    # Read-in registry of data source URLs
-    regfile  <- here::here("data", "raw", "registry.csv")
+    # Read-in registry of data source URLs (hidden file)
+    regfile  <- here::here("data",".dataregistry")
+    if (!file_exists(regfile)) {
+        readr::write_file("url,version_date,download_date", regfile)
+    }
     registry <- readr::read_csv(regfile, col_types = "cTT")
     
     # Define names and paths
-    file <- basename(url)
-    path <- here::here(relpath, file)
+    file <- path_file(url)
+    path <- here::here(fs::path(relpath), file)
+    
+    # Assert that the target directory exists
+    if (!dir_exists(fs::path(here::here(), relpath))) {
+        rlang::abort(glue::glue("{path} does not exist. Please create it."))
+    }
     
     # Check that the URL is valid and ends in '.csv'
     rex_url <- "(\\b(https?|ftp|file)://)?[-a-z0-9+&@#/%?=~_|!:,.;]+csv$"
@@ -73,7 +88,7 @@ download_csv_url <- function(url, relpath = "data/raw", refresh_stale = TRUE) {
     }
     last_mod <- lubridate::dmy_hms(h$headers$`last-modified`)
     
-    if (!file.exists(path)) {
+    if (!file_exists(path)) {
         # Download if missing
         rlang::inform(glue::glue("{file} not present. Downloading..."))
         download.file(url = url, destfile = path)
