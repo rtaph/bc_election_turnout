@@ -1,23 +1,29 @@
 ---
-title: "Exploratory Data Analysis"
-author: "Rafael Pilliard Hellwig"
+title: 'EDA: Voter Turnout and Race Competitiveness'
+author:
+- Kamal Moravej Jahromi
+- Chad Neald
+- Rafael Pilliard Hellwig
+- Yuan Xiong
 date: "19/11/2020"
-output: html_document
-editor_options: 
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
   chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
 ## Intro
 
-In this exploratory data analysis (EDA), we will take a first look at our elections data. Our research question of interest is whether more competitive elections are associated with greater voter turnout. To answer this, we will be using open data from Election British Columbia.
+In this exploratory data analysis (EDA), we will take a first look at our elections data. Our research question of interest is whether more competitive elections are associated with greater voter turnout in British Columbia. To answer this, we will be using open data from Elections BC. Scripts for downloading these data are provided in the `src/` directory.
 
 ## Load the data
 
-Let's start by loading the data. We are using two pen data sources from Elections BC: the provincial voting results, and the provincial voter participation. We'll name these `pvr` and `pvp`, respectively.
+Let's start by loading the data. We are using two open data sources: the provincial voting results, and the provincial voter participation.  We will these in here and name them `pvr` and `pvp`, respectively.
 
 ```{r load-packages, message=FALSE}
 # Load packages
@@ -39,27 +45,31 @@ f2 <- here::here("data", "raw", "provincial_voter_participation_by_age_group.csv
 pvp <- janitor::clean_names(read_csv(f2))
 ```
 
-Let's take a look a the sample sample or rows from our voter participation dataset:
+Let's take a look a the sample sample or rows from our voter participation dataset by creating an exploratory data table:
 
 ```{r head-pvp}
-sample_n(pvp, 10)
+sample_n(pvp, 10) %>%
+  knitr::kable()
 ```
 
 Let's do the same for our election results data. Here, we only show a sub-selection of the columns.
 
 ```{r head-pvr}
 pvr %>%
-    sample_n(10) %>%
-    select(ed_name, event_year, event_name, affiliation, vote_category,
-           votes_considered)
+  sample_n(10) %>%
+  select(ed_name, event_year, event_name, affiliation, vote_category,
+         votes_considered) %>%
+  knitr::kable()
 ```
 
 Let's create some EDA profile reports. These will be created as PDFs in the `eda` directory, and will include marginal plots, basic descriptive statistics, and information about missing data. We'll use the `dataMaid` package for this.
 
 ```{r profiling-reports, eval=FALSE}
 # Create PDF profile reports
-dataMaid::makeDataReport(pvr, replace = TRUE)
-dataMaid::makeDataReport(pvp, replace = TRUE)
+dataMaid::makeDataReport(pvr, file = here::here("eda", "profile_pvr.Rmd"), 
+                         replace = TRUE)
+dataMaid::makeDataReport(pvp, file = here::here("eda", "profile_pvp.Rmd"),
+                         replace = TRUE)
 ```
 
 ## Data Cleaning and Transformation 
@@ -76,7 +86,9 @@ pvp_agg <- pvp %>%
 ```
 
 
-We can also aggregate the voting results data. As we do this, we will also compute some  variables for each ED and electoral event, such as `share_diff`, the difference in share of the vote between the winner and the runner up for a particular race in an electoral district. We'll also join-in our voter turnout data.
+We can also aggregate the voting results data. As we do this, we will also compute some  variables for each ED and electoral event, such as `competitiveness`. We operationalized the latter as the point difference in vote share between the runner-up and the winner. For example, if in a given district, a party wins with 42% of the votes, and the runner up has 30%, this would be a 12-point difference.
+
+Finally, we will also join-in our voter turnout data.
 
 ```{r pvr-agg}
 # Aggregate election results by event and electoral district. 
@@ -88,10 +100,10 @@ pvr_agg <- pvr %>%
     arrange(event_name, ed_name, desc(votes)) %>%
     mutate(vote_share = votes / sum(votes),
            rank = row_number(),
-           vote_trail = first(votes) - votes,
-           share_trail = first(vote_share) - vote_share,
+           vote_trail = votes - first(votes) ,
+           share_trail = vote_share - first(vote_share),
            vote_diff = nth(vote_trail, 2),
-           share_diff = nth(share_trail, 2),
+           competitiveness = nth(share_trail, 2),
            winning_party = nth(affiliation, 1)) %>%
     nest(candidates = c(affiliation, votes, vote_share, vote_trail,
                         share_trail, rank)) %>%
@@ -102,7 +114,7 @@ pvr_agg <- pvr %>%
 
 ## Analysis 
 
-Now, let's plot our dependent variable: voter turnout. It appears that we have data on this at the electoral district for the General Elections held in 2005, 2009, 2013, and 2017 (but not for by-elections).
+Now, let's plot our dependent variable: voter turnout. It appears that we have data on this at the electoral district for the General Elections held in 2005, 2009, 2013, and 2017 (but not sufficient amounts of data for by-elections).
 
 
 ```{r violinplot}
@@ -119,32 +131,42 @@ pvp_agg %>%
 
 Turnout seems to vary quite a bit from one election to another. That might be something to keep in mind for subsequent analyses, as we may want to control for this factor.
 
-Let's continue to transform our data and visualize the relationship between our two variables of interest: voter turn out (as a percentage of total eligible voters in a district) vs. the competitiveness of a race. Here, we operationalize the latter concept as the point difference in vote share between the winner and the runner-up. For example, if in a given district, a party wins with 42% of the votes, and the runner up has 30%, this would be a 12-point difference.
+Let's look at some of the other correlations between numeric variables. We are particularly interested in `turnout`:
 
+```{r corrplot, message=FALSE}
+pvr_agg %>%
+  select(where(is.numeric)) %>%
+  GGally::ggcorr(label = TRUE, label_round = 2) +
+  labs(title = "Correlation Matrix")
+```
+
+We see that there is 0.27 correlation between `turnout` and `competitiveness`. In subsequent analysis, we will test if this correlation is just spurious or statistically significant.
+
+Let's plot these two variables against one another in a scatter plot, and add a trendline:
 
 ```{r scatterplot, fig.width=8}
 # Scatter plot relating the voter turnout to the competitiveness of a race
 pvr_agg %>%
-    drop_na(share_diff) %>%
+    drop_na(competitiveness) %>%
     mutate(across(event_name, fct_lump, n = 4, 
                   other_level = "Other By-Elections")) %>%
-    ggplot(aes(x = share_diff, y = turnout)) +
+    ggplot(aes(x = competitiveness, y = turnout)) +
     geom_point(aes(shape = event_name)) +
     geom_smooth(method = "lm", formula = y ~ x, colour = "black") +
     scale_y_continuous(labels = scales::percent_format(1)) +
     scale_x_continuous(labels = scales::percent_format(1)) +
     labs(title = "The more competitive the race, the greater the turnout",
-         #caption = "Source: Elections BC Open Data",
-         y = "Estimated Voter Turnout Within Electoral District",
-         x = "Difference in Share of the Vote between Winnner and Runner-Up",
-         shape = "Event") +
+         caption = "Source: Elections BC Open Data",
+         y = "Voter Turnout Within Electoral District",
+         x = "Competitiveness\n(Vote Share of the Runner-Up MINUS Vote Share of the Winner)",
+         shape = "Election") +
     theme(legend.position = "right", legend.direction = "vertical")
-    
 ```
 
-As hypothesised, the more competitive a race is, the greater the associated turnout. On the chart, we see a negative sloping trendline, because competitiveness is the additive inverse of the difference in vote share (the x-axis).
+As hypothesized, the more competitive a race is, the greater the associated turnout. This is reflected visually in the positive sloping trendline.
 
 ## Conclusion
 
-This exploratory data analysis has given us some nice visuals that support our hypothesis. In subsequent analyses, we will test this more formally using regression and/or other statistical methods.
+This exploratory data analysis has given us some nice visuals that support our hypothesis. In subsequent analyses, we will test this more formally using regression and/or other statistical tests.
+
 
