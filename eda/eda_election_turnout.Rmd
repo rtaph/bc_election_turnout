@@ -23,7 +23,7 @@ In this exploratory data analysis (EDA), we will take a first look at our electi
 
 ## Load the data
 
-Let's start by loading the data. We are using two open data sources: the provincial voting results, and the provincial voter participation.  We will these in here and name them `pvr` and `pvp`, respectively.
+Let's start by loading the data. We are using two open data sources: the provincial voting results, and the provincial voter participation.  We will load these in here and name them `pvr` and `pvp`, respectively.
 
 ```{r load-packages, message=FALSE}
 # Load packages
@@ -45,7 +45,7 @@ f2 <- here::here("data", "raw", "provincial_voter_participation_by_age_group.csv
 pvp <- janitor::clean_names(read_csv(f2))
 ```
 
-Let's take a look a the sample sample or rows from our voter participation dataset by creating an exploratory data table:
+Let's take a look a sample of rows from our voter participation dataset by creating an exploratory data table:
 
 ```{r head-pvp}
 sample_n(pvp, 10) %>%

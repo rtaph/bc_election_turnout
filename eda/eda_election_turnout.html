@@ -442,7 +442,7 @@ summary {
 </div>
 <div id="load-the-data" class="section level2">
 <h2>Load the data</h2>
-<p>Let’s start by loading the data. We are using two open data sources: the provincial voting results, and the provincial voter participation. We will these in here and name them <code>pvr</code> and <code>pvp</code>, respectively.</p>
+<p>Let’s start by loading the data. We are using two open data sources: the provincial voting results, and the provincial voter participation. We will load these in here and name them <code>pvr</code> and <code>pvp</code>, respectively.</p>
 <pre class="r"><code># Load packages
 library(tidyverse)
 
@@ -488,7 +488,7 @@ pvp &lt;- janitor::clean_names(read_csv(f2))</code></pre>
 ##   REGISTERED_VOTERS = col_number(),
 ##   EVENT_DATE_TEXT = col_character()
 ## )</code></pre>
-<p>Let’s take a look a the sample sample or rows from our voter participation dataset by creating an exploratory data table:</p>
+<p>Let’s take a look a sample of rows from our voter participation dataset by creating an exploratory data table:</p>
 <pre class="r"><code>sample_n(pvp, 10) %&gt;%
   knitr::kable()</code></pre>
 <table>
