@@ -34,6 +34,17 @@ We see that there is 0.27 correlation between `turnout` and `competitiveness`. W
 
 The exploratory analysis shows that an electoral district's competitiveness is positively correlated with its voter turnout rate. This matches our expectations. More analysis will be done to complete the project in coming weeks.
 
+## Dependencies
+
+R version 3.6.1 and R packages:
+    - dataMaid=1.4
+    - docopt=0.7.1
+    - GGally=2.0
+    - ggthemes=4.2
+    - here=0.1
+    - janitor=2.0.1
+    - tidyverse=1.3
+    
 ## References
 
 1. https://www.nationalpopularvote.com/voter-turnout-substantially-higher-battleground-states-spectator-states
