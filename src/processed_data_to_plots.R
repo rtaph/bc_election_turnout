@@ -9,23 +9,23 @@ Usage: src/processed_data_to_plots.R --input=<input> --out_dir=<out_dir>
 
 Options:
 --input=<input>                   The file path to the cleaned data file.
---out_dir=<out_dir>               The file path to where the processed data should be saved. 
+--out_dir=<out_dir>               The file path to where the processed data should be saved.
 " -> doc
 
 library(tidyverse)
 library(docopt)
 
 opt <- docopt(doc)
-message(opt)
+
 dr_violin_plot <- function (input, out_dir) {
   data <- readRDS(input)
-  violin_plot <- data %>% 
-    ggplot(aes(y = turnout, x = factor(event_name))) +
+  violin_plot <- data %>%
+    ggplot(aes(y = turnout, x = factor(str_wrap(event_name, 15)))) +
     geom_violin(size = 1) +
-    scale_y_continuous(labels = scales::percent) +
+    scale_y_continuous(labels = scales::percent_format(1)) +
     labs(title = "Electoral District (ED) Voter Turnout Rates",
-         x = "Percentage of Eligible Voters Who Partcipated in ED",
-         y = "Density") +
+         y = "Density of % of Eligible\nVoters Who Partcipated in ED",
+         x = NULL) +
     stat_summary(fun = mean)
   ggsave(filename = here::here(out_dir, 'violin_plot.png'))
 }
@@ -33,21 +33,21 @@ dr_violin_plot <- function (input, out_dir) {
 dr_violin_plot(opt[['--input']], opt[['--out_dir']])
 
 dr_correlation_matrix <- function (input, out_dir) {
-   data <- readRDS(input)  
+   data <- readRDS(input)
    cor_matrix <- data %>%
      select(where(is.numeric)) %>%
      GGally::ggcorr(label = TRUE, label_round = 2) +
      labs(title = "Correlation Matrix")
    ggsave(filename = here::here(out_dir, 'cor_matrix.png'))
 }
- 
+
 dr_correlation_matrix(opt[['--input']], opt[['--out_dir']])
- 
+
 dr_scatter_plot <- function(input, out_dir) {
    data <- readRDS(input)
    scatter_plot <- data %>%
      drop_na(competitiveness) %>%
-     mutate(across(event_name, fct_lump, n = 4, 
+     mutate(across(event_name, fct_lump, n = 4,
                    other_level = "Other By-Elections")) %>%
      ggplot(aes(x = competitiveness, y = turnout)) +
      geom_point(aes(shape = event_name)) +
@@ -62,5 +62,5 @@ dr_scatter_plot <- function(input, out_dir) {
      theme(legend.position = "right", legend.direction = "vertical")
    ggsave(filename = here::here(out_dir, 'scatter_plot.png'))
 }
- 
+
 dr_scatter_plot(opt[['--input']], opt[['--out_dir']])

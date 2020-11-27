@@ -120,12 +120,12 @@ Now, let's plot our dependent variable: voter turnout. It appears that we have d
 ```{r violinplot}
 # Violin plots of voter turnout
 pvp_agg %>%
-    ggplot(aes(y = turnout, x = factor(event_name))) +
+    ggplot(aes(y = turnout, x = factor(str_wrap(event_name, 15)))) +
     geom_violin(size = 1) +
-    scale_y_continuous(labels = scales::percent) +
+    scale_y_continuous(labels = scales::percent_format(1)) +
     labs(title = "Electoral District (ED) Voter Turnout Rates",
-         x = "Percentage of Eligible Voters Who Partcipated in ED",
-         y = "Density") +
+         y = "Density of % of Eligible\nVoters Who Partcipated in ED",
+         x = NULL) +
     stat_summary(fun = mean)
 ```
 
