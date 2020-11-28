@@ -3,7 +3,7 @@
 
 "Perform Pearson' Product Moment Correlation Test
 
-Usage: src/run_test.R [--input=<input>] [--out_dir=<out_dir>]
+Usage: src/perform_statistical_test.R [--input=<input>] [--out_dir=<out_dir>]
 
 Options:
 --input=<input>        Path (including filename) to cleaned data (saved as

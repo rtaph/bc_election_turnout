@@ -1,6 +1,3 @@
-# author: Kamal Moravej
-# date: 2020-11-25
-
 "This script read the CSV data from a given path and process it.
 At the end, it write the processed csv data to the given path.
 
@@ -15,7 +12,6 @@ Options:
                                   This can be a relative or an absolute path.
 " -> doc
 
-#loading package
 library(tidyverse)
 library(here)
 library(docopt)
@@ -26,6 +22,7 @@ opt <- docopt(doc)
 
 main <- function(pvr, pvp, out_dir){
 
+  
 
   # Check if the pvr path ends in .csv
   if(!str_detect(pvr, "\\.csv$")){
@@ -41,7 +38,11 @@ main <- function(pvr, pvp, out_dir){
   pvr <- read_csv(pvr)
   pvp <- read_csv(pvp)
 
-  # cleaning the column names of dataframes
+  # Processing the data
+  # BC_election_processed_joined <- process_step(pvr, pvp)
+
+  
+
   pvp <- janitor::clean_names(pvp)
   pvr <- janitor::clean_names(pvr)
 
@@ -52,8 +53,7 @@ main <- function(pvr, pvp, out_dir){
               .groups = "drop") %>%
     mutate(turnout = participation / registered_voters)
 
-  # Aggregate election results by event and electoral district
-  # and joining two data set together.
+  # Aggregate election results by event and electoral district. 
   pvr_agg_process <- pvr %>%
     filter(vote_category == "Valid") %>%
     group_by(event_name, ed_name, affiliation) %>%
@@ -73,11 +73,12 @@ main <- function(pvr, pvp, out_dir){
     left_join(pvp_agg_process, by = c("event_name", "ed_name"))
 
 
-  # saving a processed csv data in a given path.
+  # saving a processed csv data in a given path
   dir.create(here(out_dir), recursive = TRUE)
   file = here::here(out_dir, "bc_election_by_district.rds")
   saveRDS(pvr_agg_process, file = file)
 
 } 
+
 main(opt$pvr_input, opt$pvp_input, opt$out_dir)
 #main(opt[["--input"]], opt[["--out_dir"]])
