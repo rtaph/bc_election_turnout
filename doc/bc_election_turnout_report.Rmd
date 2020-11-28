@@ -52,6 +52,19 @@ The pvr dataset contains the number of votes for each candidate and their respec
 
 ## Analysis
 
+
+Before inspecting our test results, we briefly analyse our data and model assumptions. Since our `cor.test()` is equivalent to a simple linear regression, we can check many of the test assumptions the standard diagnostic plots under a regression framework.  Figure 1 shows some of these diagnostics. In the top two panels, we observe that while not perfect, our residuals are roughly Gaussian. The QQ plot (top-left panel) suggests that that we right-skew, with a particularly heavy right tail. Accordingly, confidence intervals and statistical tests may not have ideal coverage. 
+
+The residual scatter plots do appear like white noise and we do not see any major red flags. From the bottom panel, we seem to have relatively few influential observations that could jeopardize our conclusions.
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE, fig.height=8, fig.width=8, fig.cap="Fig.1: Diagnostic Plots"}
+bc_election_by_district <- read_rds(here::here("data", "processed", "bc_election_by_district.rds"))
+fit <- lm(turnout ~ competitiveness, data = bc_election_by_district)
+performance::check_model(fit)
+```
+
+Since our model assumptions are reasonably satisfied, we are content to rely on the assumptions of our statistical test in the subsequent section.
+
 ## Results and Discussion
 
 ## References
