@@ -3,6 +3,8 @@ title: "Higher Turnout Rate For Competitive Election Districts in BC"
 output: 
   html_document:
     toc: true
+editor_options: 
+  chunk_output_type: console
 ---
 ## Summary
 
@@ -67,4 +69,17 @@ Since our model assumptions are reasonably satisfied, we are content to rely on 
 
 ## Results and Discussion
 
+Performing the Pearson correlation test in R with `cor.test()` produces the results in Table 1. We observe a positive correlation of 0.27 between the competitiveness of a district and its voter turnout. As the p-value $p < .001$ falls below our alpha threshold, we reject the null hypothesis and conclude that the linear dependence is statistically significant.
+
+```{r, echo=FALSE}
+cor_test <- read_rds(here::here("data", "processed", "cor_test.rds"))
+cap <- "Table 1. Pearson Correlation Test Results"
+knitr::kable(cor_test, caption = cap)
+```
+
+While the statistical test above does not make any causal claim, the findings do align with the way many political pundits think about certain causal relationships in elections. Namely, that common thinking is that rivaling political parties, informed by pre-election polls, invest more time and money in campaigning and "getting out the vote" in districts they think might swing the election. This behaviour is likely a product of our "first-past-the=post" system, in which the winner takes all. An interesting angle of analysis to probe this potential explanation further would be to compare whether this correlation holds in jurisdictions that use proportional representation.
+
+Subsequent analysis could also continue build out a model explaining the voter turnout through multiple regression. Some key variables explored during the exploratory stages includes marginally predictive variables such as the election year. Inclusion of additional variables, and careful quasi-experimental methods and analysis-- could help build this model out to a more useful and actionable model for actors in the political space.
+
 ## References
+
