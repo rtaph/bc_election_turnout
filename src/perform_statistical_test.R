@@ -3,12 +3,12 @@
 
 "Perform Pearson' Product Moment Correlation Test
 
-Usage: src/run_test.R [--input=<input>] [--out_dir=<out_dir>]
+Usage: src/perform_statistical_test.R [--input=<input>] [--out_dir=<out_dir>]
 
 Options:
 --input=<input>        Path (including filename) to cleaned data (saved as
                        an RDS data frame with numeric columns `competitiveness`
-                       and `turnout`) [default: data/processed/pvr_agg.rds]
+                       and `turnout`)
 --out_dir=<out_dir>    Path to directory where the results should be saved (as
                        an RDS file) [default: data/processed]
 " -> doc
