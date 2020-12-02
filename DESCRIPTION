@@ -1,0 +1,37 @@
+Package: bcelectionturnout
+Title: BC Election Turnout and Competitiveness Project
+Version: 0.1.0.9000
+Authors@R: 
+    c(person(given = "Kamal",
+             family = "Moravej Jahromi",
+             role = c("aut")),
+      person(given = "Chad",
+             family = "Neald",
+             role = c("aut")),
+      person(given = "Rafael",
+             family = "Pilliard-Hellwig",
+             email = "rtaph@student.ubc.ca",
+             role = c("aut", "cre")),
+      person(given = "Yuan",
+             family = "Xiong",
+             role = c("aut")))
+Description: A group project for DSCI 522 through the Master of Data Science Program at the University of British Columbia.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    cowplot (>= 1.1.0),
+    dataMaid (>= 1.4),
+    docopt (>= 0.7.1),
+    GGally (>= 2.0),
+    ggpubr (>= 0.4.0),
+    ggthemes (>= 4.2),
+    here (>= 0.1),
+    janitor (>= 2.0.1),
+    tidyverse (>= 1.3)
+Suggests:
+    lintr,
+    spelling
+Language: en-US
