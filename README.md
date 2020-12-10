@@ -1,15 +1,8 @@
 BC Election Turnout and Competitiveness Project
 ===============================================
 
-authors:
-
--   Kamal Moravej Jahromi
-
--   Chad Neald
-
--   Rafael Pilliard Hellwig
-
--   Yuan Xiong
+authors: Kamal Moravej Jahromi, Chad Neald, Rafael Pilliard Hellwig,
+Yuan Xiong
 
 date: 28/11/2020
 
@@ -61,23 +54,73 @@ captures the positive correlation.
 Usage
 -----
 
-To download the data, generate the figures, and replicate the analysis
-of this project you need to clone this repository and install all
-dependencies listed below. Once that is complete, you need to run the
-Makefile from the root of this project by executing the following from
-the command line:
+Start by cloning this directory to your local machine. Next, you may
+either run the analysis with GNU Make locally (Option 1), or through a
+docker container for maximum reproducibility (Option 2).
 
+For both options, the steps taken by the `make all` command can be shown
+by the following dependency graph:
+
+![](Makefile.png)
+
+### Option 1: Running the analysis locally
+
+To run the analysis using your local installation of R, navigate to the
+root of the project directory. Then start by installing the necessary
+dependencies from inside your R console:
+
+    # Install R dependencies
+    install.packages("remotes")
+    remotes::install_deps()
+
+Next, to download the data, generate the figures, and replicate the
+analysis of this project, run the Makefile from the root of this project
+by executing the following from the command line:
+
+    # Clear out all the data files and analysis
+    make clean
+
+    # Download the data and generate the analysis
     make all
+
+### Option 2: Running the analysis with Docker
+
+For maximum reproducibility, we recommend running the entire analysis
+through Docker. To pull the image from DockerHub, run the following at
+the shell:
+
+    docker pull cneald/bc_election:latest
+
+If you wish to build the image yourself instead of pulling it, you can
+do so by running the following at the shell from the root of the project
+directory:
+
+    docker build -t cneald/bc_election .
+
+To run the analysis inside of the docker container (non-interactively),
+run
+
+    # clear out the project
+    docker run --rm -v $(pwd):/home/rstudio cneald/bc_election make -C home/rstudio clean
+
+    # run the project
+    docker run --rm -v $(pwd):/home/rstudio cneald/bc_election make -C home/rstudio all
+
+Alternatively, you can also work interactively through a RStudio server
+session:
+
+    docker run -it --rm -e PASSWORD=abcd -v /$(pwd):/home/rstudio/ -p 8787:8787 bc_election
+
+You should change the password from `abcd` to a password of your choice.
+If you are working on a Windows system and have challenges with the
+above command, you may also need to change `/$(pwd)` to an absolute path
+pointing to the root of the project. You can then navigate to
+`localhost:8787` in your browser to interact with the RStudio session.
 
 Dependencies
 ------------
 
-To install all dependencies, run the following command in the RStudio
-console from the root of the project.
-
-`remotes::install_deps()`
-
--   R version 3.6.1 and R packages:
+-   R version 4.0.3 and R packages:
     -   cowplot=1.1.0
     -   dataMaid=1.4
     -   docopt=0.7.1
