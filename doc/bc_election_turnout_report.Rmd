@@ -9,6 +9,8 @@ date: "2020-12-09"
 bibliography: references.bib
 nocite: |
   @BC_elections_license
+header-includes:
+    - \usepackage{caption}
 output: 
   github_document:
     toc: true
@@ -17,6 +19,9 @@ output:
   html_document:
     toc: true
 ---
+\captionsetup[table]{labelformat=empty}
+\captionsetup[figure]{labelformat=empty}
+
 ## Summary
 
 The aim of the project is to determine if there is a correlation between voter turnout and the competitiveness of an election district. Specifically, we look at elections occurring in British Columbia between 2005 and 2017. We hypothesized at the beginning of this project that we would find a correlation between the two variables. With our hypothesis in place, we set a threshold of 0.05 as our probability of committing a Type I error and we refer to this value as $\alpha$. 
@@ -60,24 +65,21 @@ knitr::include_graphics("../eda/bc_election_turnout_files/figure-html/pvr.jpg")
 
 ## Analysis
 
-The scatter plot of competitiveness and turnout is shown in Figure 1. Figure 1 shows that an electoral district's competitiveness is potentially positively correlated with its voter turnout rate. This matches our expectations. However, in order to understand if their correlation is statistically significant, we will use a two-sided Pearson correlation test via `cor.test()` in R with the following hypotheses:
+In order to use the `cor.test()` we need to satisfy ourselves that the assumptions of `cor.test()` are sufficiently met. The first condition of `cor.test()` is the normality of two variables. We check the normality using Q-Q plots (quantile-quantile plots) in Figure 1. These plots show that the normality assumption is reasonable. The second condition is the  linearity of covariation which can be examined by looking at the scatter plot of two variables (Figure 2). Since a visual inspection of the scatter plot does not seem to suggest any non-linear pattern, we consider this condition to be valid as well.
+
+```{r, fig.cap = "Figure 1. Q-Q plot for competitiveness and turnout.", echo = FALSE, out.width='100%'}
+knitr::include_graphics("images/cow_plot.png")
+```
+
+The scatter plot of competitiveness and turnout is shown in Figure 2. It shows that an electoral district's competitiveness is potentially positively correlated with its voter turnout rate. This matches our expectations. However, in order to understand if their correlation is statistically significant, we will use a two-sided Pearson correlation test via `cor.test()` in R with the following hypotheses:
 
 > **Null Hypothesis:** The correlation coefficient between the voter turnout rate and the race competitiveness is equal to zero. 
 
 > **Alternative Hypothesis:**  The corrrelation coefficient between the voter turnout rate and the race competitiveness is not equal to zero. 
 
-In order to use the `cor.test()` we need to run some preliminary tests to check the assumptions of `cor.test()`. The first condition of `cor.test()` is the normality of two variables. We check the normality using Q-Q plots (quantile-quantile plots) (Figure 2). Figure 2 shows that the normality assumption is valid. The second condition is the  linearity of covariation which can be examined by looking at the scatter plot of two variables (Figure 1). Since the scatter plot does not display a curved pattern, we consider this condition to be valid as well.
 
-```{r, fig.cap = "Figure 1. A scatter plot displaying competitiveness vs turnout", echo = FALSE, out.width='100%'}
-
+```{r, fig.cap = "Figure 2. A scatter plot displaying competitiveness vs turnout", echo = FALSE, out.width='100%'}
 knitr::include_graphics("images/scatter_plot.png")
-
-```
-
-```{r, fig.cap = "Figure 2. Q-Q plot for competitiveness and turnout.", echo = FALSE, out.width='100%'}
-
-knitr::include_graphics("images/cow_plot.png")
-
 ```
 
 

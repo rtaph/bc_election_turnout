@@ -43,14 +43,18 @@ dr_scatter_plot <- function(input, out_dir) {
     scale_x_continuous(labels = scales::percent_format(1)) +
     labs(
       title = "The more competitive the race, the greater the turnout",
-      caption = "Source: Elections BC Open Data",
+      caption = "Source: Authors' own analysis of Elections BC open data",
       y = "Voter Turnout Within Electoral District",
       x = glue::glue(
         "Competitiveness
         (Vote Share of the Runner-Up MINUS Vote Share of the Winner)"),
       shape = "Election"
     ) +
-    theme(legend.position = "right", legend.direction = "vertical")
+    ggthemes::theme_fivethirtyeight() +
+    theme(
+      axis.title = element_text(),
+      legend.position = "right",
+      legend.direction = "vertical")
   ggsave(
     filename = here::here(out_dir, "scatter_plot.png"),
     width = 8, height = 6

@@ -29,10 +29,12 @@ dir.create(here::here(opt$out_dir), recursive = TRUE, showWarnings = FALSE)
 
 dr_cow_plot <- function(input, out_dir) {
   data <- readRDS(input)
+  thm <- ggthemes::theme_fivethirtyeight() + theme(axis.title = element_text())
   plot1 <- ggpubr::ggqqplot(na.omit(data$competitiveness),
-    ylab = "competitiveness"
+    ylab = "competitiveness", ggtheme = thm
   )
-  plot2 <- ggpubr::ggqqplot(na.omit(data$turnout), ylab = "turnout")
+  plot2 <- ggpubr::ggqqplot(na.omit(data$turnout), ylab = "turnout",
+                            ggtheme = thm)
   cow_plot <- cowplot::plot_grid(plot1, plot2, ncol = 2)
   ggsave(
     filename = here::here(out_dir, "cow_plot.png"), plot = cow_plot,
