@@ -1,5 +1,11 @@
 ---
 title: "Higher Turnout Rate For Competitive Election Districts in BC"
+author:
+- Kamal Moravej Jahromi
+- Chad Neald
+- Rafael Pilliard Hellwig
+- Yuan Xiong
+date: "2020-12-09"
 bibliography: references.bib
 nocite: |
   @BC_elections_license
