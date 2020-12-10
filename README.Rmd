@@ -31,6 +31,10 @@ Using a Pearson correlation test we arrive at a p-value of $< 0.001$ which is le
 
 Start by cloning this directory to your local machine. Next, you may either run the analysis with GNU Make locally (Option 1), or through a docker container for maximum reproducibility (Option 2).
 
+For both options, the steps taken by the `make all` command can be shown by the following dependency graph:
+
+![](Makefile.png)
+
 
 ### Option 1: Running the analysis locally
 
