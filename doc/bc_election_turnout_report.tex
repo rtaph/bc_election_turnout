@@ -37,6 +37,7 @@
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
   pdftitle={Higher Turnout Rate For Competitive Election Districts in BC},
+  pdfauthor={Kamal Moravej Jahromi; Chad Neald; Rafael Pilliard Hellwig; Yuan Xiong},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
@@ -50,7 +51,7 @@
 % Allow footnotes in longtable head/foot
 \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
 \makesavenoteenv{longtable}
-\usepackage{graphicx}
+\usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -67,34 +68,11 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-\ifluatex
-  \usepackage{selnolig}  % disable illegal ligatures
-\fi
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[3] % #1 hanging-ident, #2 entry sp
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
-  % set line spacing
-  % set entry spacing
-  \ifnum #2 > 0
-  \setlength{\parskip}{#3\baselineskip}
-  \fi
- }%
- {}
-\usepackage{calc} % for \widthof, \maxof
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\maxof{\widthof{#1}}{\csllabelwidth}}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth}{#1}}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\usepackage{caption}
 
 \title{Higher Turnout Rate For Competitive Election Districts in BC}
-\author{}
-\date{\vspace{-2.5em}}
+\author{Kamal Moravej Jahromi \and Chad Neald \and Rafael Pilliard Hellwig \and Yuan Xiong}
+\date{2020-12-09}
 
 \begin{document}
 \maketitle
@@ -103,6 +81,9 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
+\captionsetup[table]{labelformat=empty}
+\captionsetup[figure]{labelformat=empty}
+
 \hypertarget{summary}{%
 \subsection{Summary}\label{summary}}
 
@@ -129,8 +110,8 @@ positive correlation.
 In the past 2020 US election, it was reported
 \href{https://www.nationalpopularvote.com/voter-turnout-substantially-higher-battleground-states-spectator-states}{that
 the voter turnout rate was substantially higher in battleground states
-than spectator states} ({``Voter Turnout Is Substantially Higher in
-Battleground States Than Spectator States''} 2020). We are interested to
+than spectator states} (``Voter Turnout Is Substantially Higher in
+Battleground States Than Spectator States'' 2020). We are interested to
 know if a similar pattern was also observed in the provincial elections
 of British Columbia in the past few years. Therefore, in this data
 analysis project, we work with publicly available data sets to answer
@@ -214,13 +195,27 @@ summary of the dataset is shown in Table 2.
 \hypertarget{analysis}{%
 \subsection{Analysis}\label{analysis}}
 
-The scatter plot of competitiveness and turnout is shown in Figure 1.
-Figure 1 shows that an electoral district's competitiveness is
-potentially positively correlated with its voter turnout rate. This
-matches our expectations. However, in order to understand if their
-correlation is statistically significant, we will use a two-sided
-Pearson correlation test via \texttt{cor.test()} in R with the following
-hypotheses:
+In order to use the \texttt{cor.test()} we need to satisfy ourselves
+that the assumptions of \texttt{cor.test()} are sufficiently met. The
+first condition of \texttt{cor.test()} is the normality of two
+variables. We check the normality using Q-Q plots (quantile-quantile
+plots) in Figure 1. These plots show that the normality assumption is
+reasonable. The second condition is the linearity of covariation which
+can be examined by looking at the scatter plot of two variables (Figure
+2). Since a visual inspection of the scatter plot does not seem to
+suggest any non-linear pattern, we consider this condition to be valid
+as well.
+
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/cow_plot} \caption{Figure 1. Q-Q plot for competitiveness and turnout.}\label{fig:unnamed-chunk-2}
+\end{figure}
+
+The scatter plot of competitiveness and turnout is shown in Figure 2. It
+shows that an electoral district's competitiveness is potentially
+positively correlated with its voter turnout rate. This matches our
+expectations. However, in order to understand if their correlation is
+statistically significant, we will use a two-sided Pearson correlation
+test via \texttt{cor.test()} in R with the following hypotheses:
 
 \begin{quote}
 \textbf{Null Hypothesis:} The correlation coefficient between the voter
@@ -233,22 +228,8 @@ the voter turnout rate and the race competitiveness is not equal to
 zero.
 \end{quote}
 
-In order to use the \texttt{cor.test()} we need to run some preliminary
-tests to check the assumptions of \texttt{cor.test()}. The first
-condition of \texttt{cor.test()} is the normality of two variables. We
-check the normality using Q-Q plots (quantile-quantile plots) (Figure
-2). Figure 2 shows that the normality assumption is valid. The second
-condition is the linearity of covariation which can be examined by
-looking at the scatter plot of two variables (Figure 1). Since the
-scatter plot does not display a curved pattern, we consider this
-condition to be valid as well.
-
 \begin{figure}
-\includegraphics[width=1\linewidth]{images/scatter_plot} \caption{Figure 1. A scatter plot displaying competitiveness vs turnout}\label{fig:unnamed-chunk-2}
-\end{figure}
-
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/cow_plot} \caption{Figure 2. Q-Q plot for competitiveness and turnout.}\label{fig:unnamed-chunk-3}
+\includegraphics[width=1\linewidth]{images/scatter_plot} \caption{Figure 2. A scatter plot displaying competitiveness vs turnout}\label{fig:unnamed-chunk-3}
 \end{figure}
 
 \hypertarget{results-and-discussion}{%
@@ -349,29 +330,21 @@ This project was carried out using the R programming language (R Core
 Team 2020). The following packages were used within R to carry out the
 exploratory data analysis and the final analysis: broom (Robinson,
 Hayes, and Couch 2020), cowplot (Wilke 2020), dataMaid (Petersen and
-Ekstrøm 2019), docopt (de Jonge 2020), dplyr (Wickham et al. 2020),
-GGally (Schloerke et al. 2020), ggpubr (Kassambara 2020), ggthemes
-(Arnold 2019), here (Müller 2020), httr (Wickham 2020a), janitor (Firke
-2020), knitr (Xie 2020), stringr (Wickham 2019), testthat (Wickham
-2011), tidyr (Wickham 2020b), and tidyverse (Wickham et al. 2019).
+Ekstrøm 2019), docopt (de Jonge 2020), dplyr (Wickham, François, et al.
+2020), GGally (Schloerke et al. 2020), ggpubr (Kassambara 2020),
+ggthemes (Arnold 2019), here (Müller 2020), httr (Wickham 2020a),
+janitor (Firke 2020), knitr (Xie 2020), stringr (Wickham 2019), testthat
+(Wickham 2011), tidyr (Wickham 2020b), and tidyverse (Wickham, Averick,
+et al. 2019).
 
 \hypertarget{references}{%
 \subsection*{References}\label{references}}
 \addcontentsline{toc}{subsection}{References}
 
 \hypertarget{refs}{}
-\begin{CSLReferences}{1}{0}
-\leavevmode\hypertarget{ref-pvp}{}%
-2018a. 2018.
-\url{https://catalogue.data.gov.bc.ca/dataset/6d9db663-8c30-43ec-922b-d541d22e634f/resource/646530d4-078c-4815-8452-c75639962bb4}.
-
-\leavevmode\hypertarget{ref-pvr}{}%
-2018b. 2018.
-\url{https://catalogue.data.gov.bc.ca/dataset/44914a35-de9a-4830-ac48-870001ef8935/resource/fb40239e-b718-4a79-b18f-7a62139d9792}.
-
 \leavevmode\hypertarget{ref-ggthemes}{}%
 Arnold, Jeffrey B. 2019. \emph{Ggthemes: Extra Themes, Scales and Geoms
-for 'ggplot2'}. \url{https://CRAN.R-project.org/package=ggthemes}.
+for 'Ggplot2'}. \url{https://CRAN.R-project.org/package=ggthemes}.
 
 \leavevmode\hypertarget{ref-docopt}{}%
 de Jonge, Edwin. 2020. \emph{Docopt: Command-Line Interface
@@ -379,7 +352,7 @@ Specification Language}.
 \url{https://CRAN.R-project.org/package=docopt}.
 
 \leavevmode\hypertarget{ref-BC_elections_license}{}%
-{``Elections BC Open Data Licence.''} n.d.
+``Elections Bc Open Data Licence.'' n.d.
 \url{https://www.elections.bc.ca/docs/EBC-Open-Data-Licence.pdf}.
 
 \leavevmode\hypertarget{ref-janitor}{}%
@@ -387,7 +360,7 @@ Firke, Sam. 2020. \emph{Janitor: Simple Tools for Examining and Cleaning
 Dirty Data}. \url{https://CRAN.R-project.org/package=janitor}.
 
 \leavevmode\hypertarget{ref-ggpubr}{}%
-Kassambara, Alboukadel. 2020. \emph{Ggpubr: 'ggplot2' Based Publication
+Kassambara, Alboukadel. 2020. \emph{Ggpubr: 'Ggplot2' Based Publication
 Ready Plots}. \url{https://CRAN.R-project.org/package=ggpubr}.
 
 \leavevmode\hypertarget{ref-here}{}%
@@ -395,8 +368,8 @@ Müller, Kirill. 2020. \emph{Here: A Simpler Way to Find Your Files}.
 \url{https://CRAN.R-project.org/package=here}.
 
 \leavevmode\hypertarget{ref-dataMaid}{}%
-Petersen, Anne Helby, and Claus Thorn Ekstrøm. 2019. {``{dataMaid}: Your
-Assistant for Documenting Supervised Data Quality Screening in {R}.''}
+Petersen, Anne Helby, and Claus Thorn Ekstrøm. 2019. ``dataMaid: Your
+Assistant for Documenting Supervised Data Quality Screening in R.''
 \emph{Journal of Statistical Software} 90 (6): 1--38.
 \url{https://doi.org/10.18637/jss.v090.i06}.
 
@@ -413,17 +386,17 @@ Statistical Objects into Tidy Tibbles}.
 \leavevmode\hypertarget{ref-GGally}{}%
 Schloerke, Barret, Di Cook, Joseph Larmarange, Francois Briatte, Moritz
 Marbach, Edwin Thoen, Amos Elberg, and Jason Crowley. 2020.
-\emph{GGally: Extension to 'ggplot2'}.
+\emph{GGally: Extension to 'Ggplot2'}.
 \url{https://CRAN.R-project.org/package=GGally}.
 
 \leavevmode\hypertarget{ref-US_voter_turnout}{}%
-{``Voter Turnout Is Substantially Higher in Battleground States Than
-Spectator States.''} 2020. 2020.
+``Voter Turnout Is Substantially Higher in Battleground States Than
+Spectator States.'' 2020. 2020.
 \url{https://www.nationalpopularvote.com/sites/default/files/npv-voter-turnout-memo-v9-2020-5-9.pdf}.
 
 \leavevmode\hypertarget{ref-testthat}{}%
-Wickham, Hadley. 2011. {``Testthat: Get Started with Testing.''}
-\emph{The R Journal} 3: 5--10.
+Wickham, Hadley. 2011. ``Testthat: Get Started with Testing.'' \emph{The
+R Journal} 3: 5--10.
 \url{https://journal.r-project.org/archive/2011-1/RJournal_2011-1_Wickham.pdf}.
 
 \leavevmode\hypertarget{ref-stringr}{}%
@@ -431,7 +404,7 @@ Wickham, Hadley. 2011. {``Testthat: Get Started with Testing.''}
 String Operations}. \url{https://CRAN.R-project.org/package=stringr}.
 
 \leavevmode\hypertarget{ref-httr}{}%
----------. 2020a. \emph{Httr: Tools for Working with URLs and HTTP}.
+---------. 2020a. \emph{Httr: Tools for Working with Urls and Http}.
 \url{https://CRAN.R-project.org/package=httr}.
 
 \leavevmode\hypertarget{ref-tidyr}{}%
@@ -441,23 +414,29 @@ String Operations}. \url{https://CRAN.R-project.org/package=stringr}.
 \leavevmode\hypertarget{ref-tidyverse}{}%
 Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
 D'Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
-{``Welcome to the {tidyverse}.''} \emph{Journal of Open Source Software}
-4 (43): 1686. \url{https://doi.org/10.21105/joss.01686}.
+``Welcome to the tidyverse.'' \emph{Journal of Open Source Software} 4
+(43): 1686. \url{https://doi.org/10.21105/joss.01686}.
 
 \leavevmode\hypertarget{ref-dplyr}{}%
-Wickham, Hadley, Romain FranÃ§ois, Lionel Henry, and Kirill MÃ¼ller.
-2020. \emph{Dplyr: A Grammar of Data Manipulation}.
+Wickham, Hadley, Romain François, Lionel Henry, and Kirill Müller. 2020.
+\emph{Dplyr: A Grammar of Data Manipulation}.
 \url{https://CRAN.R-project.org/package=dplyr}.
 
 \leavevmode\hypertarget{ref-cowplot}{}%
 Wilke, Claus O. 2020. \emph{Cowplot: Streamlined Plot Theme and Plot
-Annotations for 'ggplot2'}.
+Annotations for 'Ggplot2'}.
 \url{https://CRAN.R-project.org/package=cowplot}.
 
 \leavevmode\hypertarget{ref-knitr}{}%
 Xie, Yihui. 2020. \emph{Knitr: A General-Purpose Package for Dynamic
-Report Generation in r}. \url{https://yihui.org/knitr/}.
+Report Generation in R}. \url{https://yihui.org/knitr/}.
 
-\end{CSLReferences}
+\leavevmode\hypertarget{ref-pvp}{}%
+2018a. 2018.
+\url{https://catalogue.data.gov.bc.ca/dataset/6d9db663-8c30-43ec-922b-d541d22e634f/resource/646530d4-078c-4815-8452-c75639962bb4}.
+
+\leavevmode\hypertarget{ref-pvr}{}%
+2018b. 2018.
+\url{https://catalogue.data.gov.bc.ca/dataset/44914a35-de9a-4830-ac48-870001ef8935/resource/fb40239e-b718-4a79-b18f-7a62139d9792}.
 
 \end{document}
