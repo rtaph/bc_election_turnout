@@ -109,7 +109,7 @@ run
 Alternatively, you can also work interactively through a RStudio server
 session:
 
-    docker run -it --rm -e PASSWORD=abcd -v /$(pwd):/home/rstudio/ -p 8787:8787 bc_election
+    docker run -it --rm -e PASSWORD=abcd -v /$(pwd):/home/rstudio/ -p 8787:8787 cneald/bc_election
 
 You should change the password from `abcd` to a password of your choice.
 If you are working on a Windows system and have challenges with the
