@@ -22,7 +22,7 @@ this question, we have used two publicly available data sets from
 Elections BC which “Contains information licenced under the Elections BC
 Open Data Licence” available
 [here](https://www.elections.bc.ca/docs/EBC-Open-Data-Licence.pdf)
-(“Elections BC Open Data Licence,” n.d.). The first data set is the
+(“Elections Bc Open Data Licence,” n.d.). The first data set is the
 [provincial voter
 participation](https://catalogue.data.gov.bc.ca/dataset/6d9db663-8c30-43ec-922b-d541d22e634f/resource/646530d4-078c-4815-8452-c75639962bb4)
 (Elections BC 2018a) dataset and the second is the [provincial voting
@@ -146,5 +146,5 @@ Elections BC. 2018a. 2018.
 ———. 2018b. 2018.
 <https://catalogue.data.gov.bc.ca/dataset/44914a35-de9a-4830-ac48-870001ef8935/resource/fb40239e-b718-4a79-b18f-7a62139d9792>.
 
-“Elections BC Open Data Licence.” n.d.
+“Elections Bc Open Data Licence.” n.d.
 <https://www.elections.bc.ca/docs/EBC-Open-Data-Licence.pdf>.
