@@ -53,14 +53,14 @@ The data for this project comes from Elections BC and "[c]ontains information li
 The pvp dataset, as the name suggests, includes the number of votes as well as the number of registered voters broken down by election and election district. With this information, we can extrapolate the turnout rate per election district for each election. A summary of the dataset is shown in Table 1.
 
 ```{r, tab_1, fig.cap="Table 1. Summary of provincial voting participation dataset.", echo = FALSE, out.width='100%'}
-knitr::include_graphics("../eda/bc_election_turnout_files/figure-html/pvp.jpg")
+knitr::include_graphics("../eda/bc_election_turnout_files/figure-html/pvp.png")
 ```
 
 
 The pvr dataset contains the number of votes for each candidate and their respective party broken down again by election and election district. From this, we can determine how competitive a race was by calculating the difference in votes between the top two candidates. A summary of the dataset is shown in Table 2.
 
 ```{r, fig.cap="Table 2. Summary of provincial voting results dataset.", echo = FALSE, out.width='100%'}
-knitr::include_graphics("../eda/bc_election_turnout_files/figure-html/pvr.jpg")
+knitr::include_graphics("../eda/bc_election_turnout_files/figure-html/pvr.png")
 ```
 
 ## Analysis
