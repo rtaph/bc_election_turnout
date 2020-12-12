@@ -64,8 +64,10 @@ turnout rate and the competitiveness of a race. The voter turnout rate
 is calculated as the number of valid votes cast divided by the number of
 registered voters in an ED for a given election. An electoral district’s
 competitiveness is calculated as the negative difference in share of the
-votes between winner and runner-up. We will use a two-sided Pearson
-correlation test via `cor.test()` in R with the following hypotheses:
+votes between winner and runner-up. The smaller magnitude of
+competitiveness variable is an indicator of closer/ more competitive
+election. We will use a two-sided Pearson correlation test via
+`cor.test()` in R with the following hypotheses:
 
 > **Null Hypothesis:** The correlation coefficient between the voter
 > turnout rate and the race competitiveness is equal to zero.
@@ -76,7 +78,9 @@ correlation test via `cor.test()` in R with the following hypotheses:
 Our Type I error will be set at alpha = 0.05. We expect this correlation
 to be positive.
 
-An exploratory data analysis (EDA) can be found in the `eda/` directory.
+An exploratory data analysis (EDA) can be found in the
+[`eda/`](https://github.com/UBC-MDS/bc_election_turnout/tree/main/eda)
+directory.
 
 ## Data
 
@@ -97,7 +101,7 @@ is shown in Table 1.
 
 <div class="figure">
 
-<img src="../eda/bc_election_turnout_files/figure-html/pvp.jpg" alt="Table 1. Summary of provincial voting participation dataset." width="100%" />
+<img src="../eda/bc_election_turnout_files/figure-html/pvp.png" alt="Table 1. Summary of provincial voting participation dataset." width="100%" />
 
 <p class="caption">
 
@@ -115,7 +119,7 @@ summary of the dataset is shown in Table 2.
 
 <div class="figure">
 
-<img src="../eda/bc_election_turnout_files/figure-html/pvr.jpg" alt="Table 2. Summary of provincial voting results dataset." width="100%" />
+<img src="../eda/bc_election_turnout_files/figure-html/pvr.png" alt="Table 2. Summary of provincial voting results dataset." width="100%" />
 
 <p class="caption">
 
@@ -164,11 +168,12 @@ test via `cor.test()` in R with the following hypotheses:
 
 <div class="figure">
 
-<img src="images/scatter_plot.png" alt="Figure 2. A scatter plot displaying competitiveness vs turnout" width="100%" />
+<img src="images/scatter_plot.png" alt="Figure 2. A scatter plot displaying competitiveness vs turnout. The grey band is a 95% confidence interval of the regression line slope" width="100%" />
 
 <p class="caption">
 
-Figure 2. A scatter plot displaying competitiveness vs turnout
+Figure 2. A scatter plot displaying competitiveness vs turnout. The grey
+band is a 95% confidence interval of the regression line slope
 
 </p>
 

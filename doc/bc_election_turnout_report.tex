@@ -139,9 +139,10 @@ turnout rate and the competitiveness of a race. The voter turnout rate
 is calculated as the number of valid votes cast divided by the number of
 registered voters in an ED for a given election. An electoral district's
 competitiveness is calculated as the negative difference in share of the
-votes between winner and runner-up. We will use a two-sided Pearson
-correlation test via \texttt{cor.test()} in R with the following
-hypotheses:
+votes between winner and runner-up. The smaller magnitude of
+competitiveness variable is an indicator of closer/ more competitive
+election. We will use a two-sided Pearson correlation test via
+\texttt{cor.test()} in R with the following hypotheses:
 
 \begin{quote}
 \textbf{Null Hypothesis:} The correlation coefficient between the voter
@@ -157,7 +158,8 @@ zero.
 Our Type I error will be set at alpha = 0.05. We expect this correlation
 to be positive.
 
-An exploratory data analysis (EDA) can be found in the \texttt{eda/}
+An exploratory data analysis (EDA) can be found in the
+\href{https://github.com/UBC-MDS/bc_election_turnout/tree/main/eda}{\texttt{eda/}}
 directory.
 
 \hypertarget{data}{%
@@ -228,9 +230,12 @@ the voter turnout rate and the race competitiveness is not equal to
 zero.
 \end{quote}
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/scatter_plot} \caption{Figure 2. A scatter plot displaying competitiveness vs turnout}\label{fig:unnamed-chunk-3}
-\end{figure}
+\textbackslash begin\{figure\}
+\includegraphics[width=1\linewidth]{images/scatter_plot}
+\textbackslash caption\{Figure 2. A scatter plot displaying
+competitiveness vs turnout. The grey band is a 95\% confidence interval
+of the regression line slope\}\label{fig:unnamed-chunk-3}
+\textbackslash end\{figure\}
 
 \hypertarget{results-and-discussion}{%
 \subsection{Results and Discussion}\label{results-and-discussion}}

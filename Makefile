@@ -27,8 +27,8 @@ doc/images/cow_plot.png : src/make_figures_cow.R data/processed/bc_election_by_d
 data/processed/cor_test.rds : src/perform_statistical_test.R data/processed/bc_election_by_district.rds
 	Rscript src/perform_statistical_test.R --input=data/processed/bc_election_by_district.rds --out_dir=data/processed
 
-# Rnder report - pdf, md, and html files.
-doc/bc_election_turnout_report.md doc/bc_election_turnout_report.pdf doc/bc_election_turnout_report.html : doc/bc_election_turnout_report.Rmd  doc/images/cow_plot.png doc/images/scatter_plot.png data/processed/cor_test.rds eda/bc_election_turnout_files/figure-html/pvr.jpg eda/bc_election_turnout_files/figure-html/pvp.jpg doc/references.bib
+# Render report - pdf, md, and html files.
+doc/bc_election_turnout_report.md doc/bc_election_turnout_report.pdf doc/bc_election_turnout_report.html : doc/bc_election_turnout_report.Rmd  doc/images/cow_plot.png doc/images/scatter_plot.png data/processed/cor_test.rds eda/bc_election_turnout_files/figure-html/pvr.png eda/bc_election_turnout_files/figure-html/pvp.png doc/references.bib
 	Rscript -e "rmarkdown::render('doc/bc_election_turnout_report.Rmd', output_format = 'all', quiet = TRUE)"
 
 # Create a target defining all reports
