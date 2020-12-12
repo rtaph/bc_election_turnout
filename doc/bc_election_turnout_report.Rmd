@@ -44,7 +44,7 @@ Subsequently, we investigate the relationship between the following two variable
 
 Our Type I error will be set at alpha = 0.05. We expect this correlation to be positive.
 
-An exploratory data analysis (EDA) can be found in the `eda/` directory. 
+An exploratory data analysis (EDA) can be found in the [`eda/`](https://github.com/UBC-MDS/bc_election_turnout/tree/main/eda) directory. 
 
 ## Data
 
