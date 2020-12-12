@@ -113,9 +113,10 @@ session:
 
 You should change the password from `abcd` to a password of your choice.
 If you are working on a Windows system and have challenges with the
-above command, you may also need to change `/$(pwd)` to an absolute path
-pointing to the root of the project. You can then navigate to
-`localhost:8787` in your browser to interact with the RStudio session.
+above command, you may also need to change `/home/rstudio/` to
+`//home//rstudio//` to have the command run successfully. You can then
+navigate to `localhost:8787` in your browser to interact with the
+RStudio session.
 
 Dependencies
 ------------
